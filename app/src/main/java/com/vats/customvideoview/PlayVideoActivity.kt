@@ -11,7 +11,11 @@ class PlayVideoActivity : AppCompatActivity() {
         binding = ActivityPlayVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val path = intent.getStringExtra("videoUrl")
-        binding.customVideoView.setUpVideo(path)
-
+        val fragment = supportFragmentManager.findFragmentById(R.id.testFragment)
+        fragment?.let {
+            if (fragment is PlayFragment){
+                fragment.setUp(path)
+            }
+        }
     }
 }

@@ -12,13 +12,12 @@
         android:layout_height="match_parent"
         tools:context=".PlayVideoActivity">
 
-        <com.vats.customvideo.CustomVideoView
-            android:id="@+id/customVideoView"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+       <fragment
+           android:id="@+id/testFragment"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:name="com.vats.customvideoview.PlayFragment"
+           />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

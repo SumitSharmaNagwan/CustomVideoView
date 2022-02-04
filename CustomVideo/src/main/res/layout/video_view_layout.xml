@@ -9,12 +9,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#000000"
         >
 
         <VideoView
             android:id="@+id/videoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -37,17 +40,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/controll_button_bg"
+            >
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/playButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:padding="8dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="#94FFFFFF"
                 app:shapeAppearanceOverlay="@style/circular"
                 android:src="@drawable/ic_baseline_play_arrow_24" />
 
@@ -61,7 +66,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="#94FFFFFF"
+                android:padding="8dp"
                 app:shapeAppearanceOverlay="@style/circular"
                 android:src="@drawable/ic_baseline_pause_24" />
 
@@ -74,8 +79,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="#94FFFFFF"
-                android:padding="4dp"
+                android:padding="8dp"
                 app:shapeAppearanceOverlay="@style/circular"
                 android:src="@drawable/outline_replay" />
 
@@ -85,6 +89,7 @@
             android:id="@+id/bottomControlPanel"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:background="@drawable/bottom_control_bg"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <SeekBar

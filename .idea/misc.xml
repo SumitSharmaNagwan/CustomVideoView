@@ -3,10 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/drawable/bottom_control_bg.xml" value="0.1305" />
+        <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/drawable/controll_button_bg.xml" value="0.1305" />
         <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.1305" />
+        <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.1305" />
         <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/drawable/outline_replay.xml" value="0.1305" />
         <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/layout/container_view.xml" value="0.14130434782608695" />
-        <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/layout/video_view_layout.xml" value="0.14130434782608695" />
+        <entry key="..\:/Android/Sumit library/CustomVideoView/CustomVideo/src/main/res/layout/video_view_layout.xml" value="0.3333333333333333" />
         <entry key="..\:/Android/Sumit library/CustomVideoView/app/src/main/res/layout/activity_main.xml" value="0.8669354838709677" />
         <entry key="..\:/Android/Sumit library/CustomVideoView/app/src/main/res/layout/activity_play_video.xml" value="0.1" />
       </map>

@@ -22,6 +22,7 @@ private val PERMISSIONS_STORAGE_REQUIRED =
 class MainActivity : AppCompatActivity() {
     lateinit var binding  : ActivityMainBinding
 
+
     private val startActivityForResultForImage: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             val uri = activityResult.data?.data
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "video/*"
         startActivityForResultForImage.launch(intent)
+
     }
 }
 

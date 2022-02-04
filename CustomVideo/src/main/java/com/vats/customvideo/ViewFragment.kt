@@ -1,6 +1,7 @@
 package com.vats.customvideo
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,11 +11,16 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.vats.customvideo.databinding.VideoViewLayoutBinding
 import com.vats.customvideo.utils.IVideoViewActionListener
+import com.vats.customvideo.utils.formatVideoTime
 import kotlinx.coroutines.*
+import kotlin.math.roundToInt
+
 
 class ViewFragment : Fragment(), IVideoViewActionListener {
+    val TAG = "testViewHeightAndWidth"
     private lateinit var timeCounterJob: Job
     var isPlay = false
+    var mediaPlayer : MediaPlayer? = null
     lateinit var binding: VideoViewLayoutBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,19 +65,25 @@ class ViewFragment : Fragment(), IVideoViewActionListener {
                         //  val currentTime = (currentTimePercentage * currentTimePercentage)/100
                         updateSeekBar(currentTimePercentage, totalTime)
                         binding.videoView.seekTo(currentTimePercentage)
+
                     }
                 }
             })
     }
 
+
     private fun setListener() {
 
         binding.videoView.setOnPreparedListener {
             it?.let {
+
+               // it.seekTo() SEEK_CLOSEST_SYNC
+                mediaPlayer = it
                 val maxDuration = it.duration
                 binding.seekbarVideo.max = maxDuration
                 updateSeekBar(0, maxDuration)
 
+                scaleTypeCenterInside(it)
             }
         }
 
@@ -119,7 +131,6 @@ class ViewFragment : Fragment(), IVideoViewActionListener {
     @SuppressLint("SetTextI18n")
     private fun timeCounter() {
 
-
         timeCounterJob = CoroutineScope(Dispatchers.IO).launch {
             while (isPlay) {
                 delay(300)
@@ -136,15 +147,17 @@ class ViewFragment : Fragment(), IVideoViewActionListener {
         }
     }
 
-    private fun updateSeekBar(currentTime: Int, totalTime: Int) {
-        val currentTimeInSec = currentTime / 1000
-        val currentMin = currentTimeInSec / 60
-        val currentSec = currentTimeInSec % 60
-        val totalTimeInSec = totalTime / 1000
-        val totalMin = totalTimeInSec / 60
-        val endSec = totalTimeInSec % 60
-        binding.videoTime.text = "$currentMin:$currentSec / $totalMin:$endSec"
+    private fun scaleTypeCenterInside(mediaPlayer: MediaPlayer) {
+        val videoRatio = mediaPlayer.videoWidth / mediaPlayer.videoHeight.toFloat()
+        if (videoRatio <= 1) {
+            binding.videoView.scaleX = videoRatio
+        }
+    }
 
+    private fun updateSeekBar(currentTime: Int, totalTime: Int) {
+        val currentTimeString = formatVideoTime(currentTime)
+        val totalTimeString = formatVideoTime(totalTime)
+        binding.videoTime.text = "$currentTimeString / $totalTimeString"
     }
 
     override fun onDestroy() {

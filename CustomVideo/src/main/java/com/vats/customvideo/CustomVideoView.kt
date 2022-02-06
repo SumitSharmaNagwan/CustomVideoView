@@ -32,7 +32,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var scaleType: ScaleType = ScaleType.centerInside
     private var timeLabelColor: Int = Color.WHITE
     private var timeLabelTextSize = 12
-    private lateinit var timeCounterJob: Job
+    private var timeCounterJob: Job? = null
     var isPlay = false
     var mediaPlayer: MediaPlayer? = null
     private var binding: VideoViewLayoutBinding =
@@ -64,6 +64,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             binding.playAgainButton.visibility = View.GONE
             binding.pauseButton.visibility = View.VISIBLE
             binding.videoView.start()
+            timeCounter()
 
         }
         binding.viewForHideControl.setOnClickListener {
@@ -91,9 +92,11 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             binding.pauseButton.visibility = View.GONE
             binding.videoView.pause()
             isPlay = false
-            if (this::timeCounterJob.isInitialized) {
-                if (timeCounterJob.isActive) {
-                    timeCounterJob.cancel()
+
+            if (timeCounterJob != null) {
+                if (timeCounterJob!!.isActive) {
+                    timeCounterJob!!.cancel()
+                    timeCounterJob = null
                 }
             }
         }
@@ -102,6 +105,13 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
     @SuppressLint("SetTextI18n")
     private fun timeCounter() {
+        isPlay = true
+        if (timeCounterJob != null) {
+            if (timeCounterJob!!.isActive) {
+                timeCounterJob!!.cancel()
+                timeCounterJob = null
+            }
+        }
 
         timeCounterJob = CoroutineScope(Dispatchers.IO).launch {
             while (isPlay) {
@@ -196,13 +206,14 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         setVideoResource(videoUrl)
         binding.videoTime.setTextColor(timeLabelColor)
         binding.videoTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, timeLabelTextSize.toFloat())
-       // binding.seekbarVideo.setBackgroundColor(progressBackgroundColor)
+        // binding.seekbarVideo.setBackgroundColor(progressBackgroundColor)
         val progressColorFilter = PorterDuffColorFilter(progressTintColor, PorterDuff.Mode.SRC_IN)
         binding.seekbarVideo.progressDrawable.colorFilter = progressColorFilter
         val thumbColorFilter = PorterDuffColorFilter(thumbTintColor, PorterDuff.Mode.SRC_IN)
-        binding.seekbarVideo.thumb.colorFilter  = thumbColorFilter
-        val progressBackgroundColorFilter = PorterDuffColorFilter(progressBackgroundColor, PorterDuff.Mode.SRC_IN)
-       binding.seekbarVideo.progressDrawable
+        binding.seekbarVideo.thumb.colorFilter = thumbColorFilter
+        val progressBackgroundColorFilter =
+            PorterDuffColorFilter(progressBackgroundColor, PorterDuff.Mode.SRC_IN)
+        binding.seekbarVideo.progressDrawable
     }
 
     @SuppressLint("Recycle")

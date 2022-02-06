@@ -11,7 +11,7 @@ class PlayVideoActivity : AppCompatActivity() {
         binding = ActivityPlayVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val path = intent.getStringExtra("videoUrl")
-        binding.customVideoView.setUpVideo(path)
+        binding.customVideoView.setVideoResource(path)
 
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomVideoView">
+        <attr name="video_url" format="string"/>
+        <attr name="progress_tint_color" format="color"/>
+        <attr name="progress_background_color" format="color"/>
+        <attr name="thumb_tint_color" format="color"/>
+        <attr name="scale_type" format="enum" >
+            <enum name="centerCrop" value="0" />
+            <enum name="centerInside" value="1" />
+        </attr>
+        <attr name="time_label_color" format="color"/>
+        <attr name="time_label_size" format="dimension"/>
+    </declare-styleable>
+</resources>

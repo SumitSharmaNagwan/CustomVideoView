@@ -18,6 +18,10 @@
             android:layout_height="300dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:scale_type="centerInside"
+            app:time_label_color="#FFFFFF"
+            app:progress_tint_color="#035291"
+            app:thumb_tint_color="#3F51B5"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

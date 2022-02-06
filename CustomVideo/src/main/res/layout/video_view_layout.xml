@@ -89,7 +89,6 @@
             android:id="@+id/bottomControlPanel"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/bottom_control_bg"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <SeekBar

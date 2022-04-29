@@ -11,5 +11,12 @@
         </attr>
         <attr name="time_label_color" format="color"/>
         <attr name="time_label_size" format="dimension"/>
+        <attr name="play_icon" format="reference"/>
+        <attr name="pause_icon" format="reference"/>
+        <attr name="replay_icon" format="reference"/>
+        <attr name="icon_height" format="dimension"/>
+        <attr name="icon_width" format="dimension"/>
+        <attr name="icon_padding" format="dimension"/>
+
     </declare-styleable>
 </resources>

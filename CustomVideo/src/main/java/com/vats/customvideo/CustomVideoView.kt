@@ -17,7 +17,9 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.annotation.Dimension.DP
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.setPadding
 import androidx.fragment.app.FragmentManager
 import com.vats.customvideo.databinding.VideoViewLayoutBinding
 import com.vats.customvideo.utils.formatVideoTime
@@ -33,6 +35,12 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var timeLabelColor: Int = Color.WHITE
     private var timeLabelTextSize = 12
     private var timeCounterJob: Job? = null
+    private var playIcon = R.drawable.ic_baseline_play_arrow_24
+    private var pauseIcon = R.drawable.ic_baseline_pause_24
+    private var replayIcon = R.drawable.outline_replay
+    private var iconHeight =  48
+    private var iconWidth =  48
+    private var iconPadding = 8
     var isPlay = false
     var mediaPlayer: MediaPlayer? = null
     private var binding: VideoViewLayoutBinding =
@@ -206,6 +214,22 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         setVideoResource(videoUrl)
         binding.videoTime.setTextColor(timeLabelColor)
         binding.videoTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, timeLabelTextSize.toFloat())
+
+        binding.playButton.setImageResource(playIcon)
+        binding.pauseButton.setImageResource(pauseIcon)
+        binding.playAgainButton.setImageResource(replayIcon)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.videoViewRoot)
+
+
+        constraintSet.constrainHeight(binding.playButtonPanel.id,iconHeight)
+        constraintSet.constrainWidth(binding.playButtonPanel.id,iconWidth)
+        // binding.playButtonPanel.layoutParams = LayoutParams(iconWidth, iconHeight)
+        binding.playButton.setPadding(iconPadding)
+        binding.pauseButton.setPadding(iconPadding)
+        binding.playAgainButton.setPadding(iconPadding)
+
+        constraintSet.applyTo(binding.videoViewRoot)
         // binding.seekbarVideo.setBackgroundColor(progressBackgroundColor)
         val progressColorFilter = PorterDuffColorFilter(progressTintColor, PorterDuff.Mode.SRC_IN)
         binding.seekbarVideo.progressDrawable.colorFilter = progressColorFilter
@@ -239,6 +263,12 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             R.styleable.CustomVideoView_time_label_size,
             timeLabelTextSize
         )
+        playIcon = typedArray.getResourceId(R.styleable.CustomVideoView_play_icon,playIcon)
+        pauseIcon = typedArray.getResourceId(R.styleable.CustomVideoView_pause_icon,pauseIcon)
+        replayIcon = typedArray.getResourceId(R.styleable.CustomVideoView_replay_icon,replayIcon)
+        iconHeight = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_height,iconHeight)
+        iconWidth = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_width,iconWidth)
+        iconPadding = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_padding,iconPadding)
         updateUi()
     }
 

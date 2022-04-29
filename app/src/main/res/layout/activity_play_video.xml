@@ -22,6 +22,11 @@
             app:time_label_color="#FFFFFF"
             app:progress_tint_color="#035291"
             app:thumb_tint_color="#3F51B5"
+            app:icon_height="64dp"
+            app:icon_width="64dp"
+            android:padding="4dp"
+            app:play_icon="@drawable/play_circle_fill0_wght400_grad0_opsz48"
+
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.VideoView
 import androidx.annotation.Dimension.DP
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -276,6 +277,10 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         getInt(index, -1).let {
             if (it >= 0) enumValues<T>()[it] else default
         }
+
+    companion object{
+
+    }
 }
 
 enum class ScaleType {

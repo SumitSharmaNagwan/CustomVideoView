@@ -113,6 +113,17 @@
                 android:layout_marginBottom="6dp"
                 android:layout_marginStart="16dp" />
 
+            <ImageView
+                android:id="@+id/fullView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
+                android:layout_margin="8dp"
+                android:background="#2E8C3B"
+
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

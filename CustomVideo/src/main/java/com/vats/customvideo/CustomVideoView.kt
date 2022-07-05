@@ -2,9 +2,9 @@ package com.vats.customvideo
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.media.MediaPlayer
@@ -16,17 +16,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import android.widget.VideoView
-import androidx.annotation.Dimension.DP
-import androidx.appcompat.widget.ViewUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.setPadding
-import androidx.fragment.app.FragmentManager
 import com.vats.customvideo.databinding.VideoViewLayoutBinding
 import com.vats.customvideo.utils.formatVideoTime
+import com.vats.customvideo.utils.previousVideoControlList
 import kotlinx.coroutines.*
+import java.util.*
+import kotlin.properties.Delegates
 
 class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     ConstraintLayout(context, attributeSet) {
@@ -41,81 +39,132 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var playIcon = R.drawable.ic_baseline_play_arrow_24
     private var pauseIcon = R.drawable.ic_baseline_pause_24
     private var replayIcon = R.drawable.outline_replay
-    private var iconHeight =  48
-    private var iconWidth =  48
+    private var iconHeight = 48
+    private var iconWidth = 48
     private var iconPadding = 8
+    private var isReset = false
+    private var isHideControlEnabled = false
+    private var path: String? = null
     var isPlay = false
-    var mediaPlayer: MediaPlayer? = null
+    private var callBackKey by Delegates.notNull<Long>()
+    private var mediaPlayer: MediaPlayer? = null
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
 
     init {
         this.addView(binding.root)
+        callBackKey = Date().time
         binding.root.layoutParams =
             LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         setObserver()
         setListener()
         setInitValue(attributeSet)
     }
+
     fun thumbNail() = binding.videoThumbNail
 
-    fun setVideoResource(path: String?) {
-        if (path != null && path.isNotEmpty()) {
-         //   binding.videoView.setVideoPath(path)
-            binding.videoView.setVideoURI(Uri.parse(path))
+    private fun setVideoResource() {
+        if (path != null && path!!.isNotEmpty()) {
+            binding.videoView.setVideoPath(path)
+            // binding.videoView.setVideoURI(Uri.parse(path))
             val currentTime = binding.videoView.currentPosition
             val totalTime = binding.videoView.duration
             updateSeekBar(currentTime, totalTime)
+            isReset = false
         }
 
     }
 
+    fun setVideoResource(path: String?) {
+        this.path = path
+        setVideoResource()
+    }
+
+
     private fun setListener() {
 
         binding.playAgainButton.setOnClickListener {
-            binding.playButton.visibility = View.GONE
-            binding.playAgainButton.visibility = View.GONE
-            binding.pauseButton.visibility = View.VISIBLE
-            binding.videoView.start()
-            binding.videoThumbNail.visibility = View.GONE
-            timeCounter()
-
+            performPlay()
         }
         binding.viewForHideControl.setOnClickListener {
-            if (binding.playButtonPanel.visibility == View.GONE) {
-                binding.playButtonPanel.visibility = View.VISIBLE
-                binding.bottomControlPanel.visibility = View.VISIBLE
-            } else {
-                binding.playButtonPanel.visibility = View.GONE
-                binding.bottomControlPanel.visibility = View.GONE
-            }
-        }
 
-        binding.playButton.setOnClickListener {
-            binding.videoThumbNail.visibility = View.GONE
-            binding.playButton.visibility = View.GONE
-            binding.pauseButton.visibility = View.VISIBLE
-            val currentTime = binding.seekbarVideo.progress
-            binding.videoView.start()
-            // binding.videoView.seekTo(currentTime)
-            isPlay = true
-            timeCounter()
-
-        }
-        binding.pauseButton.setOnClickListener {
-            binding.playButton.visibility = View.VISIBLE
-            binding.pauseButton.visibility = View.GONE
-            binding.videoView.pause()
-            isPlay = false
-
-            if (timeCounterJob != null) {
-                if (timeCounterJob!!.isActive) {
-                    timeCounterJob!!.cancel()
-                    timeCounterJob = null
+            if (isHideControlEnabled) {
+                if (binding.playButtonPanel.visibility == View.GONE) {
+                    binding.playButtonPanel.visibility = View.VISIBLE
+                    binding.bottomControlPanel.visibility = View.VISIBLE
+                } else {
+                    binding.playButtonPanel.visibility = View.GONE
+                    binding.bottomControlPanel.visibility = View.GONE
                 }
             }
         }
 
+        binding.playButton.setOnClickListener {
+            performPlay()
+        }
+        binding.pauseButton.setOnClickListener {
+            performPause()
+        }
+    }
+
+    private fun performPlay() {
+        isHideControlEnabled = true
+        binding.playButton.visibility = View.GONE
+        binding.playAgainButton.visibility = View.GONE
+        binding.pauseButton.visibility = View.VISIBLE
+
+        binding.videoThumbNail.visibility = View.GONE
+        isPlay = true
+
+        if (isReset){
+            setVideoResource()
+
+        }
+        binding.videoView.start()
+
+        timeCounter()
+
+
+        previousVideoControlList.filter { it.key != callBackKey }.let {
+            if (it.isNotEmpty()) {
+                for (item in it) {
+                    item.value.stopWhenOtherVideoPlay()
+                }
+            }
+        }
+
+        previousVideoControlList[callBackKey] = this
+
+    }
+
+    private fun stopWhenOtherVideoPlay() {
+
+        isHideControlEnabled =false
+        isReset = true
+        binding.playAgainButton.visibility = View.GONE
+        binding.playButton.visibility = View.VISIBLE
+        binding.pauseButton.visibility = View.GONE
+        binding.playButtonPanel.visibility = View.VISIBLE
+        binding.videoThumbNail.visibility = View.VISIBLE
+        previousVideoControlList.remove(callBackKey)
+        binding.videoView.stopPlayback()
+
+    }
+
+    private fun performPause() {
+
+        isHideControlEnabled = true
+        binding.playButton.visibility = View.VISIBLE
+        binding.pauseButton.visibility = View.GONE
+        binding.videoView.pause()
+        isPlay = false
+
+        if (timeCounterJob != null) {
+            if (timeCounterJob!!.isActive) {
+                timeCounterJob!!.cancel()
+                timeCounterJob = null
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -159,6 +208,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
         binding.videoView.setOnPreparedListener {
             it?.let {
+               // mediaPlayer?.stop()
+              //  mediaPlayer?.release()
                 mediaPlayer = it
                 val maxDuration = it.duration
                 binding.seekbarVideo.max = maxDuration
@@ -174,6 +225,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             binding.pauseButton.visibility = View.GONE
             binding.playAgainButton.visibility = View.VISIBLE
             binding.videoThumbNail.visibility = View.VISIBLE
+            isHideControlEnabled = false
         }
 
         binding.seekbarVideo.setOnSeekBarChangeListener(
@@ -230,8 +282,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         constraintSet.clone(binding.videoViewRoot)
 
 
-        constraintSet.constrainHeight(binding.playButtonPanel.id,iconHeight)
-        constraintSet.constrainWidth(binding.playButtonPanel.id,iconWidth)
+        constraintSet.constrainHeight(binding.playButtonPanel.id, iconHeight)
+        constraintSet.constrainWidth(binding.playButtonPanel.id, iconWidth)
         // binding.playButtonPanel.layoutParams = LayoutParams(iconWidth, iconHeight)
         binding.playButton.setPadding(iconPadding)
         binding.pauseButton.setPadding(iconPadding)
@@ -271,12 +323,15 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             R.styleable.CustomVideoView_time_label_size,
             timeLabelTextSize
         )
-        playIcon = typedArray.getResourceId(R.styleable.CustomVideoView_play_icon,playIcon)
-        pauseIcon = typedArray.getResourceId(R.styleable.CustomVideoView_pause_icon,pauseIcon)
-        replayIcon = typedArray.getResourceId(R.styleable.CustomVideoView_replay_icon,replayIcon)
-        iconHeight = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_height,iconHeight)
-        iconWidth = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_width,iconWidth)
-        iconPadding = typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_padding,iconPadding)
+        playIcon = typedArray.getResourceId(R.styleable.CustomVideoView_play_icon, playIcon)
+        pauseIcon = typedArray.getResourceId(R.styleable.CustomVideoView_pause_icon, pauseIcon)
+        replayIcon = typedArray.getResourceId(R.styleable.CustomVideoView_replay_icon, replayIcon)
+        iconHeight =
+            typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_height, iconHeight)
+        iconWidth =
+            typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_width, iconWidth)
+        iconPadding =
+            typedArray.getDimensionPixelSize(R.styleable.CustomVideoView_icon_padding, iconPadding)
         updateUi()
     }
 
@@ -285,7 +340,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             if (it >= 0) enumValues<T>()[it] else default
         }
 
-    companion object{
+    companion object {
 
     }
 }

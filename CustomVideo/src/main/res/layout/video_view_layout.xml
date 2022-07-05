@@ -35,6 +35,56 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomControlPanel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <SeekBar
+                android:id="@+id/seekbarVideo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"
+                android:progressBackgroundTint="#FFFFFF"
+                android:progressTint="#2B45A1"
+                android:thumbTint="#2B45A1"
+                />
+
+            <TextView
+                android:id="@+id/videoTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/seekbarVideo"
+                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
+                android:text=""
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="16dp" />
+
+            <ImageView
+                android:id="@+id/fullView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
+                android:layout_margin="8dp"
+                android:background="#2E8C3B"
+
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/videoThumbNail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:scaleType="centerCrop"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/playButtonPanel"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -82,48 +132,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomControlPanel"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_constraintBottom_toBottomOf="parent">
 
-            <SeekBar
-                android:id="@+id/seekbarVideo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="8dp"
-                android:progressBackgroundTint="#FFFFFF"
-                android:progressTint="#2B45A1"
-                android:thumbTint="#2B45A1"
-                />
-
-            <TextView
-                android:id="@+id/videoTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/seekbarVideo"
-                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
-                android:text=""
-                android:textSize="12sp"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="6dp"
-                android:layout_marginStart="16dp" />
-
-            <ImageView
-                android:id="@+id/fullView"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
-                android:layout_margin="8dp"
-                android:background="#2E8C3B"
-
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

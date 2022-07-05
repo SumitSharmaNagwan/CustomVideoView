@@ -8,6 +8,7 @@ import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.media.MediaPlayer
+import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.VideoView
 import androidx.annotation.Dimension.DP
+import androidx.appcompat.widget.ViewUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.graphics.drawable.toDrawable
@@ -55,10 +57,12 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         setListener()
         setInitValue(attributeSet)
     }
+    fun thumbNail() = binding.videoThumbNail
 
     fun setVideoResource(path: String?) {
         if (path != null && path.isNotEmpty()) {
-            binding.videoView.setVideoPath(path)
+         //   binding.videoView.setVideoPath(path)
+            binding.videoView.setVideoURI(Uri.parse(path))
             val currentTime = binding.videoView.currentPosition
             val totalTime = binding.videoView.duration
             updateSeekBar(currentTime, totalTime)
@@ -73,6 +77,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             binding.playAgainButton.visibility = View.GONE
             binding.pauseButton.visibility = View.VISIBLE
             binding.videoView.start()
+            binding.videoThumbNail.visibility = View.GONE
             timeCounter()
 
         }
@@ -87,6 +92,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         }
 
         binding.playButton.setOnClickListener {
+            binding.videoThumbNail.visibility = View.GONE
             binding.playButton.visibility = View.GONE
             binding.pauseButton.visibility = View.VISIBLE
             val currentTime = binding.seekbarVideo.progress
@@ -167,6 +173,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             binding.playButton.visibility = View.GONE
             binding.pauseButton.visibility = View.GONE
             binding.playAgainButton.visibility = View.VISIBLE
+            binding.videoThumbNail.visibility = View.VISIBLE
         }
 
         binding.seekbarVideo.setOnSeekBarChangeListener(

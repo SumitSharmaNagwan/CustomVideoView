@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
                 originPath?.let { path ->
                     val intent = Intent(this, PlayVideoActivity::class.java)
                     intent.putExtra("videoUrl", path)
+                    intent.putExtra("uri",it)
                     Log.d("path", ":$path ")
                     startActivity(intent)
                 }

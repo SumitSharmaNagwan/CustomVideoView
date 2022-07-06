@@ -3,6 +3,7 @@ package com.vats.customvideo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -16,6 +17,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.setPadding
@@ -48,8 +51,11 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     var isPlay = false
     private var callBackKey by Delegates.notNull<Long>()
     private var mediaPlayer: MediaPlayer? = null
+    private var onPreparedListener : (()->Unit)? = null
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
+
+
 
     init {
         this.addView(binding.root)
@@ -61,6 +67,9 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         setInitValue(attributeSet)
     }
 
+    fun setVideoPrepareListener(OnPreparedListener : ()->Unit) {
+        onPreparedListener = OnPreparedListener
+    }
     fun thumbNail() = binding.videoThumbNail
 
     private fun setVideoResource() {
@@ -79,9 +88,27 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         this.path = path
         setVideoResource()
     }
+    fun setViewFullMode(OnMovePrevious :()->Unit){
+        binding.fullView.visibility = View.GONE
+        binding.smallView.visibility = View.VISIBLE
+        binding.smallView.setOnClickListener {
+            OnMovePrevious.invoke()
+        }
 
+    }
+    fun getCurrentDuration() = binding.videoView.currentPosition
 
     private fun setListener() {
+        binding.fullView.setOnClickListener {
+            val intent = Intent(context,FullVideoViewActivity::class.java)
+            intent.putExtra("videoUrl",path)
+
+            val orientation = this.resources.configuration.orientation;
+            intent.putExtra("orientation",orientation)
+            intent.putExtra("currentDuration",getCurrentDuration())
+
+            context.startActivity(intent)
+        }
 
         binding.playAgainButton.setOnClickListener {
             performPlay()
@@ -105,6 +132,9 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         binding.pauseButton.setOnClickListener {
             performPause()
         }
+    }
+    fun playVideo(){
+        performPlay()
     }
 
     private fun performPlay() {
@@ -207,6 +237,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private fun setObserver() {
 
         binding.videoView.setOnPreparedListener {
+
             it?.let {
                // mediaPlayer?.stop()
               //  mediaPlayer?.release()
@@ -216,6 +247,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
                 updateSeekBar(0, maxDuration)
                 setUpScaleType()
             }
+            onPreparedListener?.invoke()
         }
 
         binding.videoView.setOnCompletionListener {
@@ -249,6 +281,10 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
                     }
                 }
             })
+    }
+
+    fun seekTo(duration:Int){
+        binding.videoView.seekTo(duration)
     }
 
     private fun updateSeekBar(currentTime: Int, totalTime: Int) {
@@ -335,7 +371,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         updateUi()
     }
 
-    inline fun <reified T : Enum<T>> TypedArray.getEnum(index: Int, default: T) =
+    private inline fun <reified T : Enum<T>> TypedArray.getEnum(index: Int, default: T) =
         getInt(index, -1).let {
             if (it >= 0) enumValues<T>()[it] else default
         }

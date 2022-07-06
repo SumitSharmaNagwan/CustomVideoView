@@ -7,7 +7,9 @@
         >
         <activity
             android:name=".FullVideoViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="landscape"
+            />
     </application>
 
 </manifest>

@@ -71,10 +71,23 @@
                 android:layout_height="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
-                android:layout_margin="8dp"
-                android:background="#2E8C3B"
+                android:src="@drawable/fullscreen_48px"
+                android:paddingTop="24dp"
+                android:paddingHorizontal="12dp"
+                />
+            <ImageView
+                android:id="@+id/smallView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/seekbarVideo"
+                android:paddingTop="24dp"
+                android:paddingHorizontal="12dp"
+                android:src="@drawable/fullscreen_exit_48px"
+                android:visibility="gone"
 
                 />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ImageView

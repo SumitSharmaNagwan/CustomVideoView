@@ -3,13 +3,11 @@ package com.vats.customvideo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.media.MediaPlayer
-import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -17,12 +15,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.setPadding
 import com.vats.customvideo.databinding.VideoViewLayoutBinding
+import com.vats.customvideo.utils.CustomVideoViewUiProperty
 import com.vats.customvideo.utils.formatVideoTime
 import com.vats.customvideo.utils.previousVideoControlList
 import kotlinx.coroutines.*
@@ -51,10 +48,9 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     var isPlay = false
     private var callBackKey by Delegates.notNull<Long>()
     private var mediaPlayer: MediaPlayer? = null
-    private var onPreparedListener : (()->Unit)? = null
+    private var onPreparedListener: (() -> Unit)? = null
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
-
 
 
     init {
@@ -67,9 +63,25 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         setInitValue(attributeSet)
     }
 
-    fun setVideoPrepareListener(OnPreparedListener : ()->Unit) {
+    fun setVideoPrepareListener(OnPreparedListener: () -> Unit) {
         onPreparedListener = OnPreparedListener
     }
+
+    fun setUiProperty(customVideoViewUiProperty: CustomVideoViewUiProperty) {
+        progressTintColor = customVideoViewUiProperty.progressTintColor
+        progressBackgroundColor = customVideoViewUiProperty.progressBackgroundColor
+        thumbTintColor = customVideoViewUiProperty.thumbTintColor
+        scaleType = customVideoViewUiProperty.scaleType
+        timeLabelColor = customVideoViewUiProperty.timeLabelColor
+        timeLabelTextSize = customVideoViewUiProperty.timeLabelTextSize
+        playIcon = customVideoViewUiProperty.playIcon
+        pauseIcon = customVideoViewUiProperty.pauseIcon
+        replayIcon = customVideoViewUiProperty.replayIcon
+        iconHeight = customVideoViewUiProperty.iconHeight
+        iconPadding = customVideoViewUiProperty.iconPadding
+        updateUi()
+    }
+
     fun thumbNail() = binding.videoThumbNail
 
     private fun setVideoResource() {
@@ -88,7 +100,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         this.path = path
         setVideoResource()
     }
-    fun setViewFullMode(OnMovePrevious :()->Unit){
+
+    fun setViewFullMode(OnMovePrevious: () -> Unit) {
         binding.fullView.visibility = View.GONE
         binding.smallView.visibility = View.VISIBLE
         binding.smallView.setOnClickListener {
@@ -96,17 +109,33 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         }
 
     }
+
     fun getCurrentDuration() = binding.videoView.currentPosition
 
     private fun setListener() {
         binding.fullView.setOnClickListener {
-            val intent = Intent(context,FullVideoViewActivity::class.java)
-            intent.putExtra("videoUrl",path)
-
+            val intent = Intent(context, FullVideoViewActivity::class.java)
+            intent.putExtra("videoUrl", path)
             val orientation = this.resources.configuration.orientation;
-            intent.putExtra("orientation",orientation)
-            intent.putExtra("currentDuration",getCurrentDuration())
+            intent.putExtra("orientation", orientation)
+            intent.putExtra("currentDuration", getCurrentDuration())
 
+            //////////////////////////////////////
+            val uiProperty = CustomVideoViewUiProperty(
+                progressTintColor = progressTintColor,
+                progressBackgroundColor = progressBackgroundColor,
+                thumbTintColor = thumbTintColor,
+                scaleType = scaleType,
+                timeLabelColor = timeLabelColor,
+                timeLabelTextSize = timeLabelTextSize,
+                playIcon = playIcon,
+                pauseIcon = pauseIcon,
+                replayIcon = replayIcon,
+                iconHeight = iconHeight,
+                iconPadding = iconPadding
+
+            )
+            intent.putExtra("data", uiProperty)
             context.startActivity(intent)
         }
 
@@ -133,7 +162,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             performPause()
         }
     }
-    fun playVideo(){
+
+    fun playVideo() {
         performPlay()
     }
 
@@ -146,7 +176,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         binding.videoThumbNail.visibility = View.GONE
         isPlay = true
 
-        if (isReset){
+        if (isReset) {
             setVideoResource()
 
         }
@@ -169,7 +199,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
     private fun stopWhenOtherVideoPlay() {
 
-        isHideControlEnabled =false
+        isHideControlEnabled = false
         isReset = true
         binding.playAgainButton.visibility = View.GONE
         binding.playButton.visibility = View.VISIBLE
@@ -239,8 +269,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         binding.videoView.setOnPreparedListener {
 
             it?.let {
-               // mediaPlayer?.stop()
-              //  mediaPlayer?.release()
+                // mediaPlayer?.stop()
+                //  mediaPlayer?.release()
                 mediaPlayer = it
                 val maxDuration = it.duration
                 binding.seekbarVideo.max = maxDuration
@@ -283,7 +313,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             })
     }
 
-    fun seekTo(duration:Int){
+    fun seekTo(duration: Int) {
         binding.videoView.seekTo(duration)
     }
 

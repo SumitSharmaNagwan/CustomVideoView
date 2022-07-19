@@ -10,23 +10,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".FullVideoViewActivity">
+        tools:context=".FullVideoViewActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+        >
 
         <com.vats.customvideo.CustomVideoView
             android:id="@+id/customVideoView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="4dp"
+            app:icon_padding="4dp"
             app:icon_height="64dp"
             app:icon_width="64dp"
             app:layout_constraintEnd_toEndOf="parent"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:progress_tint_color="#035291"
-            app:scale_type="centerInside"
-            app:thumb_tint_color="#3F51B5"
-            app:time_label_color="#FFFFFF" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

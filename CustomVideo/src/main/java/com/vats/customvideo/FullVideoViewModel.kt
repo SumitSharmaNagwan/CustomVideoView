@@ -1,9 +1,8 @@
 package com.vats.customvideo
 
-import android.content.pm.ActivityInfo
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vats.customvideo.utils.FullVideoViewState
+import com.vats.customvideo.utils.CustomVideoViewUiProperty
 
 class FullVideoViewModel: ViewModel() {
 
@@ -11,5 +10,6 @@ class FullVideoViewModel: ViewModel() {
     var videoUrl :String? = null
     var defaultOrientationState : Int? = null
     var currentDuration = 0
+    var customVideoViewUiProperty : CustomVideoViewUiProperty? = null
 
 }

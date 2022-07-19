@@ -22,10 +22,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/customVideoView2"
             app:play_icon="@drawable/play_circle_fill0_wght400_grad0_opsz48"
-            app:progress_tint_color="#035291"
+            app:progress_tint_color="#E91E63"
             app:scale_type="centerInside"
-            app:thumb_tint_color="#3F51B5"
-            app:time_label_color="#FFFFFF"
+            app:thumb_tint_color="#E91E63"
+            app:time_label_color="#FF5722"
             />
 
 

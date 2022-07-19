@@ -74,6 +74,7 @@
                 android:src="@drawable/fullscreen_48px"
                 android:paddingTop="24dp"
                 android:paddingHorizontal="12dp"
+                app:tint="#FFFFFF"
                 />
             <ImageView
                 android:id="@+id/smallView"
@@ -85,8 +86,7 @@
                 android:paddingHorizontal="12dp"
                 android:src="@drawable/fullscreen_exit_48px"
                 android:visibility="gone"
-
-                />
+                app:tint="#FFFFFF" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

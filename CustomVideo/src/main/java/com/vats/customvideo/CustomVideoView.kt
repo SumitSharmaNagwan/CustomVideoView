@@ -49,6 +49,10 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var callBackKey by Delegates.notNull<Long>()
     private var mediaPlayer: MediaPlayer? = null
     private var onPreparedListener: (() -> Unit)? = null
+    private var onPlayClickListener: (() -> Unit)? = null
+    private var onPauseClickListener: (() -> Unit)? = null
+    private var onReplayClickListener: (() -> Unit)? = null
+
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
 
@@ -65,6 +69,15 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
     fun setVideoPrepareListener(OnPreparedListener: () -> Unit) {
         onPreparedListener = OnPreparedListener
+    }
+    fun setVideoPlayClickListener(OnPlayListener: () -> Unit) {
+        onPlayClickListener = OnPlayListener
+    }
+    fun setVideoPauseClickListener(OnPauseListener: () -> Unit) {
+        onPauseClickListener = OnPauseListener
+    }
+    fun setVideoReplayClickListener(OnReplayListener: () -> Unit) {
+        onReplayClickListener = OnReplayListener
     }
 
     fun setUiProperty(customVideoViewUiProperty: CustomVideoViewUiProperty) {
@@ -141,6 +154,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
         binding.playAgainButton.setOnClickListener {
             performPlay()
+            onReplayClickListener?.invoke()
         }
         binding.viewForHideControl.setOnClickListener {
 
@@ -157,9 +171,11 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
         binding.playButton.setOnClickListener {
             performPlay()
+            onPlayClickListener?.invoke()
         }
         binding.pauseButton.setOnClickListener {
             performPause()
+            onPauseClickListener?.invoke()
         }
     }
 

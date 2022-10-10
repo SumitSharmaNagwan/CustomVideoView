@@ -2,6 +2,7 @@ package com.vats.customvideo.utils
 
 import android.graphics.Color
 import android.media.MediaPlayer
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.vats.customvideo.CustomVideoView
 import com.vats.customvideo.R
@@ -32,5 +33,6 @@ data class CustomVideoViewUiProperty(
     val replayIcon : Int = R.drawable.outline_replay,
     val iconHeight : Int =48,
     val iconPadding : Int = 48,
-    val scaleType : ScaleType = ScaleType.centerCrop
+    val scaleType : ScaleType = ScaleType.centerCrop,
+    val thumbnailScaleType : ImageView.ScaleType
 ):Serializable

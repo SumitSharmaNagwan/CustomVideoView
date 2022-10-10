@@ -26,6 +26,7 @@
             app:scale_type="centerInside"
             app:thumb_tint_color="#E91E63"
             app:time_label_color="#FF5722"
+            app:thumbNailScaleType="centerInside"
             />
 
 

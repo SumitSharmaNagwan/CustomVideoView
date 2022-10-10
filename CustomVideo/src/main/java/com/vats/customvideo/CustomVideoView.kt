@@ -14,6 +14,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -32,6 +33,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var progressTintColor: Int = Color.RED
     private var progressBackgroundColor = Color.WHITE
     private var thumbTintColor = Color.RED
+    private var thumbnailScaleType = ImageView.ScaleType.CENTER_CROP
     private var scaleType: ScaleType = ScaleType.centerInside
     private var timeLabelColor: Int = Color.WHITE
     private var timeLabelTextSize = 12
@@ -145,7 +147,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
                 pauseIcon = pauseIcon,
                 replayIcon = replayIcon,
                 iconHeight = iconHeight,
-                iconPadding = iconPadding
+                iconPadding = iconPadding,
+                thumbnailScaleType = thumbnailScaleType
 
             )
             intent.putExtra("data", uiProperty)
@@ -380,6 +383,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         val progressBackgroundColorFilter =
             PorterDuffColorFilter(progressBackgroundColor, PorterDuff.Mode.SRC_IN)
         binding.seekbarVideo.progressDrawable
+        binding.videoThumbNail.scaleType = thumbnailScaleType
     }
 
     @SuppressLint("Recycle")
@@ -399,6 +403,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         thumbTintColor =
             typedArray.getColor(R.styleable.CustomVideoView_thumb_tint_color, thumbTintColor)
         scaleType = typedArray.getEnum(R.styleable.CustomVideoView_scale_type, scaleType)
+        thumbnailScaleType = typedArray.getEnum(R.styleable.CustomVideoView_thumbNailScaleType, thumbnailScaleType)
         timeLabelColor =
             typedArray.getColor(R.styleable.CustomVideoView_time_label_color, timeLabelColor)
         timeLabelTextSize = typedArray.getDimensionPixelSize(

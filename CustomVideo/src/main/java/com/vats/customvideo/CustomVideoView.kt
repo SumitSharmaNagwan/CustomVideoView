@@ -54,6 +54,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var onPlayClickListener: (() -> Unit)? = null
     private var onPauseClickListener: (() -> Unit)? = null
     private var onReplayClickListener: (() -> Unit)? = null
+    private var isPathSet : Boolean? = null
 
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
@@ -107,13 +108,18 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
             val totalTime = binding.videoView.duration
             updateSeekBar(currentTime, totalTime)
             isReset = false
+            isPathSet = false
         }
 
     }
 
-    fun setVideoResource(path: String?) {
+    fun setVideoResource(path: String?, reset : Boolean = true) {
         this.path = path
-        setVideoResource()
+        isPathSet = true
+        isReset = reset
+        if (!reset){
+            setVideoResource()
+        }
     }
 
     fun setViewFullMode(OnMovePrevious: () -> Unit) {

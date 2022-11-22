@@ -54,7 +54,7 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     private var onPlayClickListener: (() -> Unit)? = null
     private var onPauseClickListener: (() -> Unit)? = null
     private var onReplayClickListener: (() -> Unit)? = null
-    private var isPathSet : Boolean? = null
+    private var isPathSet: Boolean? = null
 
     private var binding: VideoViewLayoutBinding =
         VideoViewLayoutBinding.inflate(LayoutInflater.from(context), null, false)
@@ -73,12 +73,15 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     fun setVideoPrepareListener(OnPreparedListener: () -> Unit) {
         onPreparedListener = OnPreparedListener
     }
+
     fun setVideoPlayClickListener(OnPlayListener: () -> Unit) {
         onPlayClickListener = OnPlayListener
     }
+
     fun setVideoPauseClickListener(OnPauseListener: () -> Unit) {
         onPauseClickListener = OnPauseListener
     }
+
     fun setVideoReplayClickListener(OnReplayListener: () -> Unit) {
         onReplayClickListener = OnReplayListener
     }
@@ -113,11 +116,11 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
 
     }
 
-    fun setVideoResource(path: String?, reset : Boolean = true) {
+    fun setVideoResource(path: String?, reset: Boolean = true) {
         this.path = path
         isPathSet = true
         isReset = reset
-        if (!reset){
+        if (!reset) {
             setVideoResource()
         }
     }
@@ -283,10 +286,21 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun scaleTypeCenterInside(mediaPlayer: MediaPlayer) {
-        val videoRatio = mediaPlayer.videoWidth / mediaPlayer.videoHeight.toFloat()
-        if (videoRatio <= 1) {
-            binding.videoView.scaleX = videoRatio
+        val cw = binding.videoView.width.toFloat()
+        val ch = binding.videoView.height.toFloat()
+        val bw = mediaPlayer.videoWidth.toFloat()
+        val bh = mediaPlayer.videoHeight.toFloat()
+        /// logic center inside ********
+        val scaleW = (bw * ch) / (cw * bh)
+        val scaleH = 1F / scaleW
+        val br = bw / bh
+        val screenRation = cw / ch
+        if (br < screenRation) {
+            binding.videoView.scaleX = scaleW
+        } else {
+            binding.videoView.scaleY = scaleH
         }
+        ///////////////////////
     }
 
     private fun setObserver() {
@@ -409,7 +423,8 @@ class CustomVideoView(context: Context, attributeSet: AttributeSet) :
         thumbTintColor =
             typedArray.getColor(R.styleable.CustomVideoView_thumb_tint_color, thumbTintColor)
         scaleType = typedArray.getEnum(R.styleable.CustomVideoView_scale_type, scaleType)
-        thumbnailScaleType = typedArray.getEnum(R.styleable.CustomVideoView_thumbNailScaleType, thumbnailScaleType)
+        thumbnailScaleType =
+            typedArray.getEnum(R.styleable.CustomVideoView_thumbNailScaleType, thumbnailScaleType)
         timeLabelColor =
             typedArray.getColor(R.styleable.CustomVideoView_time_label_color, timeLabelColor)
         timeLabelTextSize = typedArray.getDimensionPixelSize(

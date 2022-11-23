@@ -94,7 +94,7 @@
             android:id="@+id/videoThumbNail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000000"
+            android:background="#48000000"
             android:scaleType="centerCrop"
             />
         <androidx.constraintlayout.widget.ConstraintLayout

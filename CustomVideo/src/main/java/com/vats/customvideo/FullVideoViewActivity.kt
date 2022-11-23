@@ -44,7 +44,7 @@ class FullVideoViewActivity : AppCompatActivity() {
         binding.customVideoView.setViewFullMode {
             movePreviousScreen()
         }
-        binding.customVideoView.setVideoResource(fullVideoViewModel.videoUrl)
+        binding.customVideoView.setVideoResource(fullVideoViewModel.videoUrl,false)
 
     }
 
